@@ -1,2 +1,2 @@
-# generativeAI
+# GenerativeAI
 Generative Artificial Intelligence
