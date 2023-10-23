@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-
-# In[90]:
-
+# Dr. Ray Islam
 
 #Intstall ipywidgets for interaction with Jupyter Notebook
 get_ipython().system('pip install openai ipywidgets')
-
-
-# In[92]:
-
 
 #import libraries
 import os
@@ -22,31 +15,18 @@ import ipywidgets as widgets
 #It is helpful for updating cell outputs
 from IPython.display import display, clear_output
 
-
-# In[93]:
-
-
 #check directory
 import os
 print(os.getcwd())
-
-
-# In[94]:
 
 
 # Change the current working directory
 os.chdir('C:/Users/ray/Documents/Knowledge/daddy')
 
 
-# In[95]:
-
-
 #check again
 import os
 print(os.getcwd())
-
-
-# In[97]:
 
 
 # Get all .txt files in the current directory
@@ -63,15 +43,8 @@ for txt_file in txt_files:
         print(f"Contents of {txt_file}:\n{content}\n" + "="*50)
         
 
-
-# In[98]:
-
-
 #Combine all text file contents into one string
 local_data = "\n".join(file_contents.values())
-
-
-# In[100]:
 
 
 #Define a function to interact with GPT-3.5 Turbo:
@@ -93,9 +66,6 @@ def ask_gpt_turbo(question):
     )
 
     return response['choices'][0]['message']['content'].strip()
-
-
-# In[103]:
 
 
 #Create interactive widgets for the chatbot:
