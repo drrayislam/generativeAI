@@ -1,0 +1,41 @@
+# import libraries
+import fitz  # Import PyMuPDF
+import re
+import json
+
+#create function
+def read_pdf_and_chunk_by_report_number(pdf_path, report_number_pattern):
+    doc = fitz.open(pdf_path)
+    text = ""
+    
+    for page in doc:
+        text += page.get_text()
+
+    pattern = re.compile(report_number_pattern)
+    matches = list(pattern.finditer(text))
+    
+    reports = []
+    for i in range(len(matches)):
+        start = matches[i].start()
+        end = matches[i+1].start() if i+1 < len(matches) else len(text)
+        report_text = text[start:end].strip()
+        reports.append({"report": report_text})
+
+    return reports
+
+def print_reports_with_spacing(reports):
+    # Convert and print each report with added spacing for readability
+    for report in reports:
+        print(json.dumps(report, indent=4))
+        print("\n" * 2)  # Print two newline characters for spacing between reports
+
+# Replace with the actual path
+pdf_path = "path/combined_3.pdf"  
+# Adjust the regex pattern as needed
+report_number_pattern = r"Report Number: \d+"  
+
+reports = read_pdf_and_chunk_by_report_number(pdf_path, report_number_pattern)
+
+# Instead of converting all reports to a single JSON string,
+# print each report separately with added spacing for readability
+print_reports_with_spacing(reports)
