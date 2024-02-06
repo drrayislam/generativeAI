@@ -1,0 +1,41 @@
+# Get libraries and packages
+pip install python-docx
+from docx import Document
+import json
+
+#Chunking
+def read_docx_and_chunk_without_labels_or_numbers(path, break_indicator="PAGE BREAK"):
+    doc = Document(path)
+    chunks = []
+    current_chunk = []
+    
+    # Process each paragraph in the document
+    for paragraph in doc.paragraphs:
+        if break_indicator in paragraph.text:
+            # If current_chunk has content, save it as a new chunk
+            if current_chunk:
+                chunks.append("\n".join(current_chunk).strip())
+                current_chunk = []  # Reset the chunk for the next section
+        else:
+            current_chunk.append(paragraph.text)
+    
+    # Add the last chunk if it exists
+    if current_chunk:
+        chunks.append("\n".join(current_chunk).strip())
+    
+    # Convert the chunks to JSON
+    chunks_json = json.dumps(chunks, indent=4)
+    return chunks_json
+
+def display_chunks_from_json(chunks_json):
+    # Load the JSON data
+    chunks = json.loads(chunks_json)
+    
+    # Display each chunk separated by a newline
+    for chunk in chunks:
+        print(f"{chunk}\n")
+
+# Example usage
+path = 'C:/Users/path/word_reports.docx'  # Replace with the actual path to your Word document
+chunks_json = read_docx_and_chunk_without_labels(path)
+display_chunks_from_json(chunks_json)
