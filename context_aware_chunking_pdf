@@ -1,0 +1,63 @@
+pip install pymupdf
+import fitz  # PyMuPDF
+import re
+import json
+#Chunking
+def chunk_text(text, headers):
+    """Chunks text based on headers."""
+    chunks = {"Introduction": ""}  # Initialize with an 'Introduction' section
+    pattern = '|'.join([f"({re.escape(header)})" for header in headers])
+    parts = re.split(pattern, text, flags=re.IGNORECASE)
+    current_header = "Introduction"  # Start with 'Introduction' as the current section
+
+    for part in parts:
+        if part:  # Ensure part is not None or empty
+            header_match = re.match(pattern, str(part), flags=re.IGNORECASE)  # Cast part to string
+            if header_match:
+                current_header = part
+                if current_header not in chunks:  # Ensure the header is in the dictionary
+                    chunks[current_header] = ""
+            else:
+                chunks[current_header] += part.strip() + " "
+    return chunks
+
+def save_chunks_to_json(chunks, output_path):
+    """Saves chunks to a JSON file."""
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(chunks, f, ensure_ascii=False, indent=4)
+
+def chunk_pdf_and_save(pdf_path, output_path, headers):
+    """Extracts text from PDF, chunks it based on headers, and saves as JSON."""
+    text = extract_text_from_pdf(pdf_path)
+    chunks = chunk_text(text, headers)
+    save_chunks_to_json(chunks, output_path)
+
+# Define your headers here. These should be the titles or sections you expect to find in the PDF.
+headers = ["Patient Information", "Diagnosis", "Treatment Plan", "Test Results", "Imaging Findings", "Biopsy Findings", "Treatment Response", "Additional Notes"]
+
+# Specify the path to your PDF and the desired output path for the JSON file.
+pdf_path = "C:/Users/report.pdf"  # Update this to your PDF's path
+output_path = "C:/Users/reports_chunked.json"  # Update this to your desired output path
+
+# Assuming the JSON file is named 'combined_chunked.json' and located in a specific directory
+file_path = 'C:/Users/rpath/reports_chunked.json'  # Update this path to where your JSON file is located
+
+# Function to read and display the JSON content with added space between chunks
+def display_json_with_spacing(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            for key, value in data.items():
+                print(f"Header: {key}")
+                print("Content:")
+                if isinstance(value, list):  # Assuming each chunk is a list of paragraphs
+                    for paragraph in value:
+                        print(paragraph)
+                else:
+                    print(value)  # For non-list content, just print the content
+                print("\n\n" + "-"*50 + "\n")  # Adds extra spacing and a separator between chunks
+    except Exception as e:
+        print(f"Failed to read or parse the JSON file: {e}")
+
+# Call the function with the path to your JSON file
+display_json_with_spacing(file_path)
