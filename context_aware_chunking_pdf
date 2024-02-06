@@ -30,9 +30,8 @@ def print_reports_with_spacing(reports):
         print("\n" * 2)  # Print two newline characters for spacing between reports
 
 # Replace with the actual path
-pdf_path = "path/combined_3.pdf"  
-# Adjust the regex pattern as needed
-report_number_pattern = r"Report Number: \d+"  
+pdf_path = "path/report.pdf"  # Replace with the actual path
+report_number_pattern = r"Report Number: \d+"  # Adjust the regex pattern as needed
 
 reports = read_pdf_and_chunk_by_report_number(pdf_path, report_number_pattern)
 
